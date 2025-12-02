@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package poll;
+
+option go_package = "poll/";
+
+// Poll
+
+message PollOption {
+  string id = 1;
+  string text = 2;
+  int32 votes = 3;
+}
+
+message Poll {
+  string id = 1;
+  string question = 2;
+  repeated PollOption options = 3;
+}
+
+// Create Poll Request
+
+message CreatePollRequest {
+  string question = 1;
+  repeated string options = 2;
+}
+
+message CreatePollResponse {
+  Poll poll = 1;
+}
+
+// Vote Request
+
+message VoteRequest {
+  string poll_id = 1;
+  string option_id = 2;
+}
+
+message VoteResponse {
+  bool success = 1;
+  Poll poll = 2;
+}
+
+// Get Results Request
+
+message GetResultsRequest {
+  string poll_id = 1;
+}
+
+message GetResultsResponse {
+  Poll poll = 1;
+}
+
+
+// Stream Results Request
+
+message StreamResultsRequest {
+  string poll_id = 1;
+}
+
+message StreamResultsResponse {
+  Poll poll = 1;
+  int32 update_number = 2;
+}
+
+// Poll Service
+// RPC methods for creating polls, voting, and retrieving results.
+service PollService {
+  rpc CreatePoll(CreatePollRequest) returns (CreatePollResponse);
+  rpc Vote(VoteRequest) returns (VoteResponse);
+  rpc GetResults(GetResultsRequest) returns (GetResultsResponse);
+  rpc StreamResults(StreamResultsRequest) returns (stream StreamResultsResponse);
+}
